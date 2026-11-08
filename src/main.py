@@ -33,7 +33,9 @@ class BookingService:
         check_in: date,
         check_out: date,
     ) -> Booking:
-        """Создаёт новое бронирование."""
+        """Создаёт новое бронирование с валидацией данных гостя."""
+        if not guest_name.strip():
+            raise ValueError("ФИО гостя обязательно для заполнения")
         if check_out <= check_in:
             raise ValueError("Дата выезда должна быть позже даты заезда")
 
