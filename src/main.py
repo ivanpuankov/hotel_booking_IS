@@ -33,9 +33,12 @@ class BookingService:
         check_in: date,
         check_out: date,
     ) -> Booking:
-        """Создаёт новое бронирование с валидацией данных гостя."""
+        """Создаёт новое бронирование с валидацией данных гостя
+        и проверкой доступности номера."""
         if not guest_name.strip():
             raise ValueError("ФИО гостя обязательно для заполнения")
+        if not self.is_room_available(room_number, check_in, check_out):
+            raise ValueError(f"Номер {room_number} занят на выбранные даты")
         if check_out <= check_in:
             raise ValueError("Дата выезда должна быть позже даты заезда")
 
@@ -49,6 +52,17 @@ class BookingService:
         self._bookings[booking.booking_id] = booking
         self._next_id += 1
         return booking
+
+    def is_room_available(
+        self, room_number: str, check_in: date, check_out: date
+    ) -> bool:
+        """Проверяет, свободен ли номер на запрошенные даты."""
+        for booking in self._bookings.values():
+            if booking.room_number != room_number or booking.status != "active":
+                continue
+            if check_in < booking.check_out and check_out > booking.check_in:
+                return False
+        return True
 
     def cancel_booking(self, booking_id: int) -> None:
         """Отменяет бронирование по идентификатору."""
