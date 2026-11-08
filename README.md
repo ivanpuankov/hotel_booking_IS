@@ -19,8 +19,3 @@ hotel_booking_IS/
 
 Пьянков Иван, группа 23ИСС1.
 
-## Как запустить
-
-1. Установить Python 3.11+.
-2. Запустить `python src/main.py`.
-3. Запустить тесты: `python -m pytest tests/`.
